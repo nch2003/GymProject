@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:style="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista Utilizatori</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    nav {
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-section {
+      position: relative;
+      text-align: center;
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-section img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .black-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 2;
+      margin-top: 20px;
+    }
+
+    .user-list-container {
+      position: relative;
+      z-index: 2;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 2rem;
+      margin-top: 50px;
+      margin-bottom: 30px;
+    }
+
+    .btn-outline-light {
+      color: white;
+      border-color: white;
+    }
+
+    .btn-outline-light:hover {
+      background-color: white;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+  <div class="container">
+    <a class="navbar-brand" href="/">FitPass</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Acasă</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/gyms">Săli</a>
+        </li>
+      </ul>
+
+      <div th:if="${conectat}">
+        <ul class="navbar-nav" th:if="${isAdmin}">
+          <li class="nav-item">
+            <a class="nav-link" href="/users">Utilizatori</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav" th:if="${!isAdmin}">
+          <li class="nav-item">
+            <a class="nav-link" href="/profile">Profil</a>
+          </li>
+        </ul>
+      </div>
+
+      <div th:if="${conectat}">
+        <form method="post" action="/logout">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <button type="submit" class="btn btn-danger">Deloghează-te</button>
+        </form>
+      </div>
+      <div th:if="${conectat == null}">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="/register" class="btn btn-outline-secondary me-2">Înregistrează-te</a>
+          </li>
+          <li class="nav-item">
+            <a href="/login" class="btn btn-secondary">Loghează-te</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="hero-section">
+  <img src="/images/Home.png" alt="Home Image" class="img-fluid">
+  <div class="black-image"></div>
+  <div class="hero-text">
+    <h1>Lista Utilizatori</h1>
+  </div>
+
+
+<div class="container user-list-container">
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nume</th>
+      <th>Email</th>
+      <th>Tip Abonament</th>
+      <th>Rol</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.username}"></td>
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.tipAb != null ? user.tipAb : '-'}"></td>
+      <td th:text="${user.admin == true ? 'Admin' : 'Utilizator'}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
